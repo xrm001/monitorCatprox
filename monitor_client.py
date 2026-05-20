@@ -13,6 +13,18 @@ import os
 import sys
 from datetime import datetime
 
+# 单实例运行 - 防止重复启动
+import tempfile
+import win32api
+import win32event
+import winerror
+
+SINGLE_INSTANCE_MUTEX = "CatproxMonitor_SingleInstance_Mutex"
+mutex = win32event.CreateMutex(None, False, SINGLE_INSTANCE_MUTEX)
+if win32api.GetLastError() == winerror.ERROR_ALREADY_EXISTS:
+    print("❌ 程序已在运行中,请勿重复启动!")
+    sys.exit(0)
+
 # 配置文件路径
 CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.txt")
 
@@ -191,4 +203,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    finally:
+        # 清理互斥锁
+        if mutex:
+            win32api.CloseHandle(mutex)
