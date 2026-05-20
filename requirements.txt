@@ -1,0 +1,9 @@
+# Catprox 分布式监控系统依赖
+# 服务端需要:
+flask==3.0.0
+flask-cors==4.0.0
+plyer==2.1.0
+
+# 客户端需要:
+psutil==5.9.6
+requests==2.31.0
